@@ -1,0 +1,6 @@
+- Have list of audio file extensions
+- Enable conversion of wav to mp3
+- Enable exploration of compressed folders (.zip and .tar files)
+- Create smart parser that determines metadata from audio file name
+- Enable manipulation of mp3 tags
+- Allow for webscraper that gets album art and other metadata for audio file from soundcloud
