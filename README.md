@@ -2,10 +2,10 @@ Audio File Manager Project:
 Author: Jacques Mathieu
 Start Date: 6/13/2019
 
-Goals of this project:
+<b>Goals of this project:</b>
 - To design a GUI tool that helps one easily update the metadata tags on one's collection of audio files
 
-  - Features that this project will include that OTHERS do not have: 
+  - Features that this project will include that <i>OTHERS do not have:</i> 
 	1) Intelligent autocompletion of metadata (more specifically):
 	   - Automatically copying the entered song name to album name (if album name is missing)
 	   - Automatically copying the entered artist name to the album artist field (if album artist field is missing)
@@ -27,10 +27,10 @@ Goals of this project:
 	1) Automatically download new songs from artists you follow on SoundCloud with the correct metadata and file format (this includes creating scripts to navigate through various 3rd party download sites that one might encounter when using SoundCloud)
 	   - At the very least, the information and album art can be downloaded automatically to the local database
 
-Tech Stack:
+<b>Tech Stack:</b>
 	- Python 3
 	- PyCharm IDE
 	- QtDesigner (GUI designer for Python based applications)
 	   
-Development methodology:
+<b>Development methodology:</b>
 	For this project, I will be taking a test-driven approach. This means I  will write tests before I write the code to fulfill those tests. I am not using a testing library at the moment, as I am challenging myself in this regard (and have built a mini test library for this project and another). This is a project I work on in my spare time, thus progress to it may be intermittent.
