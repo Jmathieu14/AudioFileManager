@@ -1,0 +1,12 @@
+# Ignore files in idea folder
+.idea/
+
+# Ignore config files
+config/
+
+# Ignore user data
+user-data/
+
+# Ignore venv
+venv/
+.idea/workspace.xml
