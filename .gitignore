@@ -11,4 +11,4 @@ user-data/
 venv/
 .idea/workspace.xml
 
-.pyc
+*.pyc
