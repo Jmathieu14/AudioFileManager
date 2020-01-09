@@ -10,3 +10,5 @@ user-data/
 # Ignore venv
 venv/
 .idea/workspace.xml
+
+.pyc
