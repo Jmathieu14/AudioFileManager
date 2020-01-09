@@ -65,14 +65,14 @@ def compare_results(expected, actual, name):
 def print_test_results(failsafe: bool):
     global TESTS_PASSED
     global TESTS_FAILED
-    print(str(TESTS_PASSED) + " successful test(s) and " + str(TESTS_FAILED) +
+    print("\n--------------------------------------------\n" + \
+          str(TESTS_PASSED) + " successful test(s) and " + str(TESTS_FAILED) + \
           " failed test(s).\n--------------------------------------------\n")
     if failsafe and TESTS_FAILED > 0:
         print("Stopping script b/c of failed tests")
         exit()
 
 def verbose_print_test_results():
-    print_test_results(False)
     global TESTS_FAILED
     global TESTS_RAN
 
@@ -82,3 +82,5 @@ def verbose_print_test_results():
     if TESTS_FAILED > 0:
         print("Stopping script b/c of failed tests")
         exit()
+
+    print_test_results(failsafe=False)

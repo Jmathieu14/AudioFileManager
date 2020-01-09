@@ -3,10 +3,10 @@
 # Part of the AudioFileManager project
 # Script to run all test files
 
-from test import test as t
+from test import test_wrapper
 
 def main():
-    t.main()
+    test_wrapper.main()
 
 if __name__ == '__main__':
     main()
