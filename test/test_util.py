@@ -31,6 +31,20 @@ TESTS_FAILED = 0
 TESTS_RAN = []
 
 
+def assert_not_null(result, name):
+    my_test_detail = TestDetail("Not Null", result, name)
+    global TESTS_PASSED
+    global TESTS_FAILED
+    global TESTS_RAN
+    if None == result:
+        print("Error in " + name)
+        my_test_detail.set_passed_false()
+        TESTS_FAILED = TESTS_FAILED + 1
+    else:
+        TESTS_PASSED = TESTS_PASSED + 1
+    TESTS_RAN.append(my_test_detail)
+
+
 # Compare results of conducted test
 def compare_results(expected, actual, name):
     my_test_detail = TestDetail(expected, actual, name)
@@ -40,17 +54,7 @@ def compare_results(expected, actual, name):
     # Allow for testing of multiple possible expected outcomes
     if type(expected) is dict and "pos_outcomes" in expected.keys():
         possible_outcomes = expected['pos_outcomes']
-        prev_tests_passed = TESTS_PASSED
-        # Iterate through each possible outcome and see if at least one was true
-        for o in possible_outcomes:
-            if actual == o:
-                TESTS_PASSED = TESTS_PASSED + 1
-                break
-        # If no change in tests passed, mark this test as a failure
-        if prev_tests_passed == TESTS_PASSED:
-            print("Error in " + name)
-            my_test_detail.set_passed_false()
-            TESTS_FAILED = TESTS_FAILED + 1
+        __compare_multiple_outcomes__(my_test_detail, possible_outcomes, actual, name)
     else:
         if actual != expected:
             print("Error in " + name)
@@ -61,13 +65,33 @@ def compare_results(expected, actual, name):
     TESTS_RAN.append(my_test_detail)
 
 
+def __compare_multiple_outcomes__(current_test_detail: TestDetail, possible_outcomes, actual, name):
+    global TESTS_PASSED
+    global TESTS_FAILED
+    global TESTS_RAN
+    prev_tests_passed = TESTS_PASSED
+    # Iterate through each possible outcome and see if at least one was true
+    for outcome in possible_outcomes:
+        if actual == outcome:
+            TESTS_PASSED = TESTS_PASSED + 1
+            break
+    # If no change in tests passed, mark this test as a failure
+    if prev_tests_passed == TESTS_PASSED:
+        print("Error in " + name)
+        current_test_detail.set_passed_false()
+        TESTS_FAILED = TESTS_FAILED + 1
+    TESTS_RAN.append(current_test_detail)
+
+
+
 # Print all test results and stop script from running if any test failed
 def print_test_results(failsafe: bool):
     global TESTS_PASSED
     global TESTS_FAILED
     print("\n--------------------------------------------\n" + \
-          str(TESTS_PASSED) + " successful test(s) and " + str(TESTS_FAILED) + \
-          " failed test(s).\n--------------------------------------------\n")
+          str(TESTS_PASSED) + " successful test(s) and " + \
+          str(TESTS_FAILED) + " failed test(s)." + \
+          "\n--------------------------------------------\n")
     if failsafe and TESTS_FAILED > 0:
         print("Stopping script b/c of failed tests")
         exit()

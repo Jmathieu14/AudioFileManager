@@ -3,15 +3,14 @@
 # Main GUI for the AudioFileManager project
 
 
-from PyQt5 import QtCore, uic, QtWidgets
+from PyQt5 import uic, QtWidgets
 import config
-import gui as g
-import utility as util
+import gui
 
 # GUI Requirements:
 # Settings Button + Page
 # |-> Show configured folder paths
-# |-> Click folder icon to choose new path, double click text to edit path manually
+# |-> Click folder icon to choose new path, click text input to edit path manually
 
 UIClass, QtBaseClass = uic.loadUiType("ui/settings.ui")
 
@@ -28,12 +27,12 @@ class SettingsView(UIClass, QtBaseClass):
 
 # Take text from each line and save to config file
 def settings_save():
-    widgets = g.get_widgets()
+    widgets = gui.get_widgets()
     print("Saving settings...")
     line_edit_fields = [
-        {"name": "dlDirectPathEdit", "f": "update_downloads_folder"},
-        {"name": "editsPathEdit", "f": "update_editing_folder"},
-        {"name": "destPathEdit", "f": "update_destination_folder"}
+        {"name": "dlDirectPathEdit", "field": "update_downloads_folder"},
+        {"name": "editsPathEdit", "field": "update_editing_folder"},
+        {"name": "destPathEdit", "field": "update_destination_folder"}
     ]
     for w in widgets:
         for line in line_edit_fields:
@@ -41,22 +40,22 @@ def settings_save():
                 line_text = getattr(QtWidgets.QLineEdit, "text")(w)
                 # Only update if text is not empty
                 if line_text != "":
-                    getattr(config, line['f'])(path=line_text)
+                    getattr(config, line['field'])(path=line_text)
 
 
 # Open folder browser for download path section
 def open_dl_folder_browser():
-    g.open_folder_browser('dlDirectPathEdit')
+    gui.open_folder_browser('dlDirectPathEdit')
 
 
 # Open folder browser for download path section
 def open_edit_folder_browser():
-    g.open_folder_browser('editsPathEdit')
+    gui.open_folder_browser('editsPathEdit')
 
 
 # Open folder browser for download path section
 def open_dest_folder_browser():
-    g.open_folder_browser('destPathEdit')
+    gui.open_folder_browser('destPathEdit')
 
 
 # Initialize the POP CONFIG for this view
@@ -86,7 +85,7 @@ def init():
                         'flat': True
                         },
         'cancel_button': {'obj_name': 'settingsCancelBtn',
-                          'click': g.show_main},
+                          'click': gui.show_main},
         'dl_path': {'obj_name': 'dlDirectPathEdit',
                     'fmod': config,
                     'fname': 'get_downloads_folder',
@@ -116,5 +115,5 @@ def run_gui():
     init()
     window = SettingsView()
     window.show()
-    g.populate_fields(POP_CONFIG)
+    gui.populate_fields(POP_CONFIG)
     return window

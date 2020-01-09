@@ -2,10 +2,12 @@
 # Created on 6/21/2019 at 5:56 PM
 # Part of the AudioFileManager project
 
-from PyQt5 import QtCore, uic, QtWidgets, QtGui
 import sys
-import settings_gui as sg
+
+from PyQt5 import QtWidgets, QtGui
+
 import main_gui as mg
+import settings_gui as sg
 
 MY_APP = None
 MY_WINDOW = None

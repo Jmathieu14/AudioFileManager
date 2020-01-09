@@ -5,11 +5,13 @@
 
 from test import test_util
 from test.client import config_test, utility_test
+from test.gui import settings_page_test
 
 
 def main():
     config_test.main()
     utility_test.main()
+    settings_page_test.main()
     test_util.verbose_print_test_results()
 
 if __name__ == '__main__':

@@ -3,9 +3,7 @@
 # File that runs the views for the AudioFileManager project
 
 
-from PyQt5 import uic, QtWidgets
 import gui as g
-import settings_gui as sg
 import main_gui as mg
 
 
