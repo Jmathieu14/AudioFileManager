@@ -5,9 +5,11 @@
 
 import utility as util
 
-CONFIG_DIR = "config/config.json"
+CONFIG_DIRECTORY = "config"
+CONFIG_FILE_PATH = "config/config.json"
 # Make sure test module can access the test config file
-TEST_CONFIG_DIR = "./config/test_config.json"
+TEST_CONFIG_FILE_PATH = "./config/test_config.json"
+TEST_CONFIG_DIRECTORY = "./config"
 TEST_ACTIVE = False
 CONFIG_JSON = {}
 
@@ -20,11 +22,19 @@ config_template = {
 
 
 # Returns correct config file path based on TEST_ACTIVE value
-def get_config_dir():
+def get_config_file_path():
     if TEST_ACTIVE:
-        return TEST_CONFIG_DIR
+        return TEST_CONFIG_FILE_PATH
     else:
-        return CONFIG_DIR
+        return CONFIG_FILE_PATH
+
+
+# Returns correct config directory path based on TEST_ACTIVE value
+def get_config_directory():
+    if TEST_ACTIVE:
+        return TEST_CONFIG_DIRECTORY
+    else:
+        return CONFIG_DIRECTORY
 
 
 # Print the current mode the config.py file is in
@@ -45,19 +55,19 @@ def init_config():
 
 # Save the config file
 def save_config():
-    my_dir = get_config_dir()
-    util.json_to_file(CONFIG_JSON, my_dir)
+    my_config_file_path = get_config_file_path()
+    util.json_to_file(CONFIG_JSON, my_config_file_path)
 
 
 # Return status of config file
 def config_status():
     global CONFIG_JSON
-    my_dir = get_config_dir()
+    my_config_file_path = get_config_file_path()
     # Does the file exist?
-    if not util.does_file_exist(my_dir):
+    if not util.does_file_exist(my_config_file_path):
         return "DNE"
     else:
-        CONFIG_JSON = util.file_to_json_obj(my_dir)
+        CONFIG_JSON = util.file_to_json_obj(my_config_file_path)
         # If file is empty, return empty
         if CONFIG_JSON == None or CONFIG_JSON == {} or CONFIG_JSON == "":
             return "empty"
@@ -81,11 +91,13 @@ def create_config_file():
     status = config_status()
     # Only do so if file truly does not exist
     if status == "DNE" or status == "empty":
-        my_dir = get_config_dir()
-        util.json_to_file(config_template, my_dir)
+        my_config_directory = get_config_directory()
+        util.create_folder_if_dne(my_config_directory)
+        my_config_file_path = get_config_file_path()
+        util.json_to_file(config_template, my_config_file_path)
         # Make sure we are accessing the global version of CONFIG_JSON; See bottom of page for info on this (Source 1)
         global CONFIG_JSON
-        CONFIG_JSON = util.file_to_json_obj(my_dir)
+        CONFIG_JSON = util.file_to_json_obj(my_config_file_path)
 
 
 # Set the downloads folder path for our config file

@@ -9,7 +9,6 @@ import config
 
 
 def main():
-    t.test_all()
     # Run after the tests!
     config.main()
     gui_r.run_gui()

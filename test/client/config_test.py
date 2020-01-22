@@ -6,14 +6,14 @@ from test import test_util
 def get_config_dir_test():
     t_name_prefix = "Get Configuration Path Test"
     name = t_name_prefix + ": TEST_ACTIVE = False"
-    expected = config.CONFIG_DIR
-    actual = config.get_config_dir()
+    expected = config.CONFIG_FILE_PATH
+    actual = config.get_config_file_path()
     test_util.compare_results(expected, actual, name)
 
     config.TEST_ACTIVE = True
     name = t_name_prefix + ": TEST_ACTIVE = True"
-    expected = config.TEST_CONFIG_DIR
-    actual = config.get_config_dir()
+    expected = config.TEST_CONFIG_FILE_PATH
+    actual = config.get_config_file_path()
     test_util.compare_results(expected, actual, name)
 
     # Return config module to its default state
@@ -166,7 +166,7 @@ def config_status_test():
     # Return config module to its default state
     config.TEST_ACTIVE = False
     config.CONFIG_JSON = {}
-    util.delete_file(config.TEST_CONFIG_DIR)
+    util.delete_file(config.TEST_CONFIG_FILE_PATH)
     # Delete temp files
     util.delete_empty_folder(test_dl_folder)
     util.delete_empty_folder(test_edit_folder)
