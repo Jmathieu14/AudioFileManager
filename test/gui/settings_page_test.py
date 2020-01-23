@@ -5,6 +5,10 @@
 import test.test_util as test_util
 import settings_gui
 import gui
+from PyQt5.QtTest import QTest
+from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets
+import sys
 
 
 def init_gui():
@@ -20,8 +24,15 @@ def settings_layout_test():
 
     base_name = "Settings layout test: "
     cur_test_name = base_name + "should have downloads folder input"
-
-    # test_util.assert_not_null(gui.get_widget("dlDirectPathEdit"), cur_test_name)
+    # setting_page_uic = settings_gui.get_settings_page_uic()
+    #
+    # print(setting_page_uic[1])
+    #
+    # my_app = QtWidgets.QApplication(sys.argv)
+    # print(my_app)
+    #
+    # test_util.assert_true(
+    #     issubclass(setting_page_uic[1], QtWidgets.QFrame), cur_test_name)
 
     # quit_gui()
 

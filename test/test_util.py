@@ -108,3 +108,17 @@ def verbose_print_test_results():
         exit()
 
     print_test_results(failsafe=False)
+
+
+def assert_true(boolean_result, name):
+    my_test_detail = TestDetail("True", boolean_result, name)
+    global TESTS_PASSED
+    global TESTS_FAILED
+    global TESTS_RAN
+    if not boolean_result:
+        print("Error in " + name)
+        my_test_detail.set_passed_false()
+        TESTS_FAILED = TESTS_FAILED + 1
+    else:
+        TESTS_PASSED = TESTS_PASSED + 1
+    TESTS_RAN.append(my_test_detail)

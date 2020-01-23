@@ -2,12 +2,9 @@
 # Created on 6/27/2019 at 1:48 PM
 # The main view handler for the AudioFileManager project
 
-from PyQt5 import QtCore, uic, QtWidgets
-import config
-import gui as g
-import settings_gui as sg
-import utility as util
+from PyQt5 import uic
 
+import gui as g
 
 # Configuration for populating fields and widgets seen on the main page
 POP_CONFIG = {}
