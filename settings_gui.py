@@ -18,10 +18,6 @@ UIClass, QtBaseClass = uic.loadUiType("ui/settings.ui")
 POP_CONFIG = {}
 
 
-def get_settings_page_uic():
-    return uic.loadUiType("ui/settings.ui")
-
-
 class SettingsView(UIClass, QtBaseClass):
     def __init__(self):
         UIClass.__init__(self)

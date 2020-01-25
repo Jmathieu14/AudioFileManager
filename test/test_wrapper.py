@@ -9,10 +9,13 @@ from test.gui import settings_page_test
 
 
 def main():
+    # -------  Run with custom test library  -------- #
     config_test.main()
     utility_test.main()
-    settings_page_test.main()
     test_util.verbose_print_test_results()
+    print("\nunittest tests:")
+    # -------  Run with unittest  -------- #
+    settings_page_test.main()
 
 if __name__ == '__main__':
     main()
