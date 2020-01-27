@@ -111,6 +111,12 @@ def open_folder_browser(obj_name):
         my_w.setText(f_dialog.getExistingDirectory(my_w, "Select Directory"))
 
 
+def open_folder_browser_from_widget(widget):
+    if widget is not None:
+        f_dialog = QtWidgets.QFileDialog
+        widget.setText(f_dialog.getExistingDirectory(widget, "Select Directory"))
+
+
 # Open file browser for specified object
 def open_file_browser(obj_name):
     my_w = get_widget(obj_name)
