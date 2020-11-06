@@ -1,1 +1,7 @@
 PyQt5
+jupyter
+jupyterlab
+pandas
+numpy
+matplotlib
+tensorflow

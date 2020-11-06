@@ -13,7 +13,7 @@ python -m run_tests
 ```
 
 ### Before Running
-1. Install Python 3
+1. Install Python 3.8.5 or later (64bit)
 2. Install pip
 3. **Install all required dependencies with the following command:**
     ``` cmd
