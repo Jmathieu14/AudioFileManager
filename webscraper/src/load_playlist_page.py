@@ -9,8 +9,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
+from webscraper.src.objects.track import Track
+
 MAX_WAIT_SECONDS = 40
 HTML_SONG_LIST: List[WebElement] = []
+TRANSCRIBED_SONG_LIST: List[Track] = []
 WEB_DRIVER = webdriver.Chrome(ChromeDriverManager().install())
 WEB_DRIVER.implicitly_wait(10)
 
@@ -23,7 +26,19 @@ def go_to_playlist_page():
     HTML_SONG_LIST = get_song_list()
     get_all_songs_from_playlist()
     WEB_DRIVER.implicitly_wait(15)
-    print_html_song_list()
+    transcribe_song_list()
+
+
+def transcribe_song_list():
+    global TRANSCRIBED_SONG_LIST
+    for i in range(0, HTML_SONG_LIST.__len__()):
+        html = HTML_SONG_LIST.__getitem__(i)
+        uploaded_by = html.find_element_by_css_selector(".trackItem__username").text
+        url = html.find_element_by_css_selector(".trackItem__trackTitle").get_attribute("href")
+        title = html.find_element_by_css_selector(".trackItem__trackTitle").text
+        track = Track(title, url, uploaded_by)
+        TRANSCRIBED_SONG_LIST.append(track)
+        track.print()
 
 
 def get_all_songs_from_playlist():
