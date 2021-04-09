@@ -7,6 +7,11 @@
 ``` cmd
 python -m main
 ```
+**The Web Scraper**
+*Note, currently one sets the URL in the load_playlist_page.py file
+``` cmd
+python -m webscraper.src.main > ./webscraper/src/sets/destination.csv
+```
 **Tests:**
 ``` cmd
 python -m run_tests

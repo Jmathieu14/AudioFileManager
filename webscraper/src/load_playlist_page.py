@@ -17,7 +17,13 @@ TRANSCRIBED_SONG_LIST: List[Track] = []
 WEB_DRIVER = webdriver.Chrome(ChromeDriverManager().install())
 WEB_DRIVER.implicitly_wait(10)
 PLAYLIST_HOST = "https://soundcloud.com/spltpersonalty"
-PLAYLIST_PATH = "/sets/kick-it-0ff"
+PLAYLIST_PATH = "/sets/gargantuan-dirty-dubstep-beats"
+
+
+def get_all_playlists_from_sets_page():
+    WEB_DRIVER.get(PLAYLIST_HOST + "/sets")
+    wait_until_page_loads()
+    close_cookies_notice()
 
 
 def go_to_playlist_page():
