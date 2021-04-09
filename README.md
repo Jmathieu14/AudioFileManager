@@ -27,6 +27,12 @@ Start Date: 6/13/2019
 	1) Automatically download new songs from artists you follow on SoundCloud with the correct metadata and file format (this includes creating scripts to navigate through various 3rd party download sites that one might encounter when using SoundCloud)
 	   - At the very least, the information and album art can be downloaded automatically to the local database
 
+### Before Running
+1. **Install all required dependencies with the following command:**
+    ``` cmd
+    pip install -r dependencies.txt
+    ```
+
 <b>Tech Stack:</b>
 	- Python 3
 	- PyCharm IDE

@@ -3,7 +3,6 @@
 # Part of the AudioFileManager project
 # Main file
 
-from test import test_wrapper as t
 import gui_runner as gui_r
 import config
 

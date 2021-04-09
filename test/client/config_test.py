@@ -2,6 +2,7 @@ import utility as util
 import config
 from test import test_util
 
+
 # Test get config directory function
 def get_config_dir_test():
     t_name_prefix = "Get Configuration Path Test"
