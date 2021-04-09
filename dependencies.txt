@@ -1,1 +1,10 @@
+PyQt5--stubs
 PyQt5
+jupyter
+jupyterlab
+pandas
+numpy
+matplotlib
+selenium
+webdriver_manager
+tensorflow
