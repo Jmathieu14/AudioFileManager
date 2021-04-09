@@ -16,11 +16,13 @@ HTML_SONG_LIST: List[WebElement] = []
 TRANSCRIBED_SONG_LIST: List[Track] = []
 WEB_DRIVER = webdriver.Chrome(ChromeDriverManager().install())
 WEB_DRIVER.implicitly_wait(10)
+PLAYLIST_HOST = "https://soundcloud.com/spltpersonalty"
+PLAYLIST_PATH = "/sets/kick-it-0ff"
 
 
 def go_to_playlist_page():
     global HTML_SONG_LIST
-    WEB_DRIVER.get("https://soundcloud.com/spltpersonalty/sets/new-beginnings")
+    WEB_DRIVER.get(PLAYLIST_HOST + PLAYLIST_PATH)
     wait_until_page_loads()
     close_cookies_notice()
     HTML_SONG_LIST = get_song_list()
