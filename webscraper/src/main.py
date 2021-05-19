@@ -1,8 +1,8 @@
-import webscraper.src.load_playlist_page as browser
+import webscraper.src.load_playlist_pages as browser
 
 
 def main():
-    browser.go_to_playlist_page()
+    browser.save_all_playlists_to_file()
 
 
 if __name__ == '__main__':

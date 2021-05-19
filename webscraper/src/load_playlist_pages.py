@@ -13,23 +13,38 @@ from webscraper.src.objects.track import Track
 
 MAX_WAIT_SECONDS = 40
 HTML_SONG_LIST: List[WebElement] = []
+PLAYLIST_URL_LIST: List[str] = []
 TRANSCRIBED_SONG_LIST: List[Track] = []
 WEB_DRIVER = webdriver.Chrome(ChromeDriverManager().install())
 WEB_DRIVER.implicitly_wait(10)
 PLAYLIST_HOST = "https://soundcloud.com/spltpersonalty"
-PLAYLIST_PATH = "/sets/gargantuan-dirty-dubstep-beats"
+PLAYLIST_PATH = "sets/gargantuan-dirty-dubstep-beats"
 
 
-def get_all_playlists_from_sets_page():
-    WEB_DRIVER.get(PLAYLIST_HOST + "/sets")
-    wait_until_page_loads()
-    close_cookies_notice()
+def save_all_playlists_to_file():
+    global HTML_SONG_LIST
+    global PLAYLIST_URL_LIST
+    get_all_playlists_from_sets_page()
+    for i in range (0, PLAYLIST_URL_LIST.__len__()):
+        HTML_SONG_LIST = []
+        url = PLAYLIST_URL_LIST.__getitem__(i)
+        save_playlist_info_from(url)
+
+
+def save_playlist_info_from(url: str):
+    global HTML_SONG_LIST
+    WEB_DRIVER.get(url)
+    WEB_DRIVER.implicitly_wait(10)
+    HTML_SONG_LIST = get_song_list()
+    get_all_songs_from_playlist()
+    WEB_DRIVER.implicitly_wait(15)
+    transcribe_song_list()
 
 
 def go_to_playlist_page():
     global HTML_SONG_LIST
     WEB_DRIVER.get(PLAYLIST_HOST + PLAYLIST_PATH)
-    wait_until_page_loads()
+    wait_until_playlist_page_loads()
     close_cookies_notice()
     HTML_SONG_LIST = get_song_list()
     get_all_songs_from_playlist()
@@ -49,6 +64,22 @@ def transcribe_song_list():
         track.print()
 
 
+def save_playlist_paths_to_global_list(playlist_url_items):
+    global PLAYLIST_URL_LIST
+    for i in range(0, playlist_url_items.__len__()):
+        element = playlist_url_items.__getitem__(i)
+        url = element.get_attribute("href")
+        PLAYLIST_URL_LIST.append(url)
+
+
+def get_all_playlists_from_sets_page():
+    WEB_DRIVER.get(PLAYLIST_HOST + "/sets")
+    WEB_DRIVER.implicitly_wait(15)
+    scroll_down_until_all_playlists_loaded()
+    playlist_url_items = get_playlists()
+    save_playlist_paths_to_global_list(playlist_url_items)
+
+
 def get_all_songs_from_playlist():
     global HTML_SONG_LIST
     scroll_down_until_all_songs_loaded()
@@ -61,9 +92,14 @@ def print_html_song_list():
         print(HTML_SONG_LIST.__getitem__(i))
 
 
-def wait_until_page_loads():
+def wait_until_playlist_page_loads():
     WebDriverWait(WEB_DRIVER, MAX_WAIT_SECONDS).until(expected_conditions.element_to_be_clickable(
         (By.CSS_SELECTOR, "#app a.announcement__dismiss[title='Dismiss']")))
+
+
+def wait_until_playlists_page_loads():
+    WebDriverWait(WEB_DRIVER, MAX_WAIT_SECONDS).until(expected_conditions.element_to_be_clickable(
+        (By.CSS_SELECTOR, "#content .soundList .soundList__item:first-child .soundTitle__playButton")))
 
 
 def close_cookies_notice():
@@ -75,6 +111,10 @@ def get_song_list() -> List[WebElement]:
     return WEB_DRIVER.find_elements_by_css_selector(".trackItem")
 
 
+def get_playlists() -> List[WebElement]:
+    return WEB_DRIVER.find_elements_by_css_selector(".soundTitle__title")
+
+
 def scroll_down_until_all_songs_loaded():
     try:
         loading_element = WEB_DRIVER.find_element_by_css_selector("ul + .loading")
@@ -82,6 +122,17 @@ def scroll_down_until_all_songs_loaded():
             scroll_down()
             WEB_DRIVER.implicitly_wait(5)
             scroll_down_until_all_songs_loaded()
+    except NoSuchElementException:
+        pass
+
+
+def scroll_down_until_all_playlists_loaded():
+    try:
+        loading_element = WEB_DRIVER.find_element_by_css_selector("ul + .loading")
+        if loading_element is not None:
+            scroll_down()
+            WEB_DRIVER.implicitly_wait(5)
+            scroll_down_until_all_playlists_loaded()
     except NoSuchElementException:
         pass
 

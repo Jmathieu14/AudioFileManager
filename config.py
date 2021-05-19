@@ -1,7 +1,7 @@
 # Author: Jacques Mathieu
 # Created on 6/13/2019 at 2:03 AM
 # Part of the AudioFileManager project
-# Program that sets up configuration file for user
+# Program that sets-old up configuration file for user
 
 import utility as util
 
