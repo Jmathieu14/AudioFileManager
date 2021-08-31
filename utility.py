@@ -24,10 +24,11 @@ def create_file_if_dne(path, text):
 # Create folder if it does not yet exist. Return the file path created
 # See Source 1 for aid with this function (bottom of page)
 def create_folder_if_dne(folder_name):
-    full_path = osp.abspath(osp.curdir + "\\" + folder_name)
-    if not osp.exists(full_path):
-        os.makedirs(full_path)
-    return full_path
+    if not folder_name.__str__().find(osp.curdir.__str__()):
+        folder_name = osp.abspath(osp.curdir + "\\" + folder_name)
+    if not osp.exists(folder_name):
+        os.makedirs(folder_name)
+    return folder_name
 
 
 # Delete a file given its path
@@ -45,7 +46,6 @@ def delete_empty_folder(path):
     os.rmdir(path)
 
 
-# Return True if file exists, else return False
 def does_file_exist(path):
     if not path.__str__().find(osp.curdir.__str__()):
         path = osp.abspath(osp.curdir + "\\" + path)
@@ -59,48 +59,6 @@ def tryint(s):
         return int(s)
     except ValueError:
         return s
-
-
-# Convert hex string to base10 string
-def hex_to_base10_string(hex):
-    idxs_to_replace = []
-    new_vals = []
-    ctr = 0
-    for c in hex:
-        new_val = -1
-        if c == 'a':
-            new_val = 10
-        elif c == 'b':
-            new_val = 11
-        elif c == 'c':
-            new_val = 12
-        elif c == 'd':
-            new_val = 13
-        elif c == 'e':
-            new_val = 14
-        elif c == 'f':
-            new_val = 15
-
-        if new_val != -1:
-            new_vals.append(new_val)
-            idxs_to_replace.append(ctr)
-
-        ctr = ctr + 1
-
-    ctr = 0
-    item_ct = idxs_to_replace.__len__()
-    new_full_str = ""
-    last_idx = 0
-
-    for ctr in range(item_ct):
-        new_str = str(new_vals[ctr])
-        new_full_str += hex[last_idx:idxs_to_replace[ctr]] + new_str
-        last_idx = idxs_to_replace[ctr] + 1
-
-    # Add last part of string
-    new_full_str += hex[last_idx:]
-
-    return new_full_str
 
 
 # Save json (or dict) to file
@@ -137,7 +95,7 @@ def copy_json(my_json):
 
 
 # Helper function for map_folder_and_subfolders
-def map_f_and_sf_helper(my_folder, my_folder_obj):
+def map_folder_and_subfolfers_helper(my_folder, my_folder_obj):
     if osp.exists(my_folder) and osp.isdir(my_folder):
         my_files_or_subdirs = os.listdir(my_folder)
         idx = 0
@@ -165,11 +123,6 @@ def map_folder_and_subfolders(my_folder):
 # Flatten a folder list to only contain filepaths to files (ignoring the parent folder)
 def flatten_folder_list(parent, folder_list):
     print("TODO: flatten_folder_list")
-
-
-
-
-
 
 
 # Source 1:

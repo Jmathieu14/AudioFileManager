@@ -1,4 +1,6 @@
 from typing import List
+from utility import create_file_if_dne, create_folder_if_dne, does_file_exist
+import os.path as osp
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -19,6 +21,32 @@ WEB_DRIVER = webdriver.Chrome(ChromeDriverManager().install())
 WEB_DRIVER.implicitly_wait(10)
 PLAYLIST_HOST = "https://soundcloud.com/spltpersonalty"
 PLAYLIST_PATH = "sets/gargantuan-dirty-dubstep-beats"
+FILE_DIR = "webscraper"
+SETS_DIR_PATH = osp.abspath("{0}\\{1}\\sets".format(osp.curdir, FILE_DIR))
+
+
+def handle_file_exists_error():
+    WEB_DRIVER.close()
+    return FileExistsError
+
+
+def transcribed_song_list_to_string():
+    song_list_as_text = ""
+    for song in TRANSCRIBED_SONG_LIST:
+        song_list_as_text = song_list_as_text + song.__str__() + "\n"
+    return song_list_as_text
+
+
+def save_transcribed_song_list_to_csv(url: str):
+    fileName = url.__str__().replace(PLAYLIST_HOST, "")
+    filePath = osp.abspath("{0}\\{1}\\{2}.csv".format(osp.curdir, FILE_DIR, fileName))
+    if not does_file_exist(filePath):
+        create_folder_if_dne(SETS_DIR_PATH)
+        print("Writing to: {0}".format(filePath))
+        content_to_write = transcribed_song_list_to_string()
+        create_file_if_dne(filePath, content_to_write)
+    else:
+        return handle_file_exists_error()
 
 
 def save_all_playlists_to_file():
@@ -29,6 +57,8 @@ def save_all_playlists_to_file():
         HTML_SONG_LIST = []
         url = PLAYLIST_URL_LIST.__getitem__(i)
         save_playlist_info_from(url)
+    WEB_DRIVER.implicitly_wait(20)
+    WEB_DRIVER.close()
 
 
 def save_playlist_info_from(url: str):
@@ -39,6 +69,7 @@ def save_playlist_info_from(url: str):
     get_all_songs_from_playlist()
     WEB_DRIVER.implicitly_wait(15)
     transcribe_song_list()
+    save_transcribed_song_list_to_csv(url)
 
 
 def go_to_playlist_page():
@@ -61,7 +92,6 @@ def transcribe_song_list():
         title = html.find_element_by_css_selector(".trackItem__trackTitle").text
         track = Track(title, url, uploaded_by)
         TRANSCRIBED_SONG_LIST.append(track)
-        track.print()
 
 
 def save_playlist_paths_to_global_list(playlist_url_items):
