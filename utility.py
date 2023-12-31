@@ -125,6 +125,19 @@ def flatten_folder_list(parent, folder_list):
     print("TODO: flatten_folder_list")
 
 
+def are_strings_equal_ignore_case(first: str, second: str):
+    return first.lower().strip() == second.lower().strip()
+
+
+def get_file_name_from_path(filepath: str):
+    return osp.basename(filepath)
+
+
+def get_absolute_directory_from_path(filepath: str):
+    fullpath = osp.abspath(filepath)
+    return osp.commonpath(fullpath)
+
+
 # Source 1:
 # https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory-in-python
 # Blair Conrad's answer

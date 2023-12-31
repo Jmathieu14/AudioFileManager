@@ -1,4 +1,3 @@
-- Have list of audio file extensions
 - Enable conversion of wav to mp3
 - Enable exploration of compressed folders (.zip and .tar files)
 - Create smart parser that determines metadata from audio file name
