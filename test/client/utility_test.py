@@ -48,8 +48,8 @@ def util_funcs_test():
     actual = util.does_file_exist(test_fp)
     test_util.compare_results(expected, actual, name)
 
-    # Test 'flatten_folder_list' function
-    name = t_name_main_pre + ": Flatten Folder List"
+    # Test 'flatten_folder_map' function
+    name = t_name_main_pre + ": Flatten Folder Map"
     test_folder_two = test_folder_path + "/folder2"
     util.create_folder_if_dne(test_folder_path)
     util.create_folder_if_dne(test_folder_two)
@@ -60,9 +60,15 @@ def util_funcs_test():
 
     expected = [osp.abspath(other_test_file), osp.abspath(test_fp)]
     test_folder_map = util.map_folder_and_subfolders(test_folder_path)
-    print(test_folder_map)
     actual = util.flatten_folder_map(test_folder_map)
     test_util.compare_results(expected, actual, name)
+
+    # Test 'flatten_folder' function
+    name = t_name_main_pre + ": Flatten Folder"
+    actual = util.flatten_folder(test_folder_path)
+    # expected is the same as from the previous test
+    test_util.compare_results(expected, actual, name)
+
     # Test cleanup
     util.delete_file(other_test_file)
     util.delete_file(test_fp)

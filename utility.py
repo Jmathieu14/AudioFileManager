@@ -10,6 +10,30 @@ import os
 import simplejson as j
 
 
+class FolderMap(object):
+    folder: str = None
+    items: list = []
+
+    def __init__(self, dictionary) -> None:
+        self.__dict__.update(dictionary)
+
+    
+    def __str__(self) -> str:
+        my_str = "{{'folder': '{}', 'items': [".format(self.folder)
+        idx = 0
+        for item in self.items:
+            if type(item) is str:
+                my_str += "'{}'".format(item)
+            elif type(item) is FolderMap:
+                my_str += item.__str__()
+            if idx == self.items.__len__() - 1:
+                my_str += "]}"
+            else:
+                my_str += ", "
+            idx += 1
+        return my_str
+
+
 # Make a file given the content and path (where text is a list of str)
 def create_file_if_dne(path, text):
     if not path.__str__().find(osp.curdir.__str__()):
@@ -95,7 +119,7 @@ def copy_json(my_json):
 
 
 # Helper function for map_folder_and_subfolders
-def map_folder_and_subfolders_helper(my_folder, my_folder_obj):
+def map_folder_and_subfolders_helper(my_folder, my_folder_obj: FolderMap):
     if osp.exists(my_folder) and osp.isdir(my_folder):
         my_files_or_subdirs = os.listdir(my_folder)
         idx = 0
@@ -107,7 +131,7 @@ def map_folder_and_subfolders_helper(my_folder, my_folder_obj):
             else:
                 my_files_or_subdirs[idx] = f_or_sd
             idx = idx + 1
-        my_folder_obj['items'] = my_files_or_subdirs
+        my_folder_obj.items = my_files_or_subdirs
         return my_folder_obj
     else:
         print(my_folder + " does not exist or is not a folder")
@@ -115,28 +139,49 @@ def map_folder_and_subfolders_helper(my_folder, my_folder_obj):
 
 # Return a python dict containing each file name and folder path
 # within a directory
-def map_folder_and_subfolders(my_folder: str):
+def map_folder_and_subfolders(my_folder: str) -> FolderMap:
     my_folder = osp.relpath(my_folder)
     my_folder_obj = {
         'folder': my_folder,
         'items': []
     }
+    my_folder_obj = FolderMap(my_folder_obj)
     return map_folder_and_subfolders_helper(my_folder, my_folder_obj)
 
 
-def flatten_folder_map_helper(folder_map, flattened_list):
-    for item in folder_map['items']:
+def flatten_folder_map_helper(folder_map: FolderMap, flattened_list):
+    for item in folder_map.items:
         if type(item) is str:
             flattened_list.append(osp.abspath(item))
-        elif type(item) is dict:
+        elif type(item) is FolderMap:
             flatten_folder_map_helper(item, flattened_list)
 
 
-# Flatten a folder map to only contain filepaths to files
-def flatten_folder_map(folder_map):
+def flatten_folder_map(folder_map: FolderMap):
+    """Flatten a `FolderMap` into a list that only contains filepaths to files in the `FolderMap`
+
+    Args:
+        folder_map (FolderMap): The folder map
+
+    Returns:
+        list: The filepath list
+    """
     flattened_list = []
     flatten_folder_map_helper(folder_map, flattened_list)
     return flattened_list
+
+
+def flatten_folder(folder):
+    """Flattens a given folder name into a list of all filepaths to files under that folder and its subfolders
+
+    Args:
+        folder (str): The folder name
+
+    Returns:
+        list: The filepath list
+    """
+    folder_map = map_folder_and_subfolders(folder)
+    return flatten_folder_map(folder_map)
 
 
 def are_strings_equal_ignore_case(first: str, second: str):
