@@ -18,6 +18,14 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "test.py",
+            "type": "python",
+            "request": "launch",
+            "program": "run_tests.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }

@@ -95,19 +95,19 @@ def copy_json(my_json):
 
 
 # Helper function for map_folder_and_subfolders
-def map_folder_and_subfolfers_helper(my_folder, my_folder_obj):
+def map_folder_and_subfolders_helper(my_folder, my_folder_obj):
     if osp.exists(my_folder) and osp.isdir(my_folder):
         my_files_or_subdirs = os.listdir(my_folder)
         idx = 0
         for f_or_sd in my_files_or_subdirs:
-            f_or_sd = my_folder + "\\" + f_or_sd
+            f_or_sd = osp.join(my_folder, f_or_sd)
             if osp.isdir(f_or_sd):
                 ret_val = map_folder_and_subfolders(f_or_sd)
-                my_files_or_subdirs[idx] = ret_val[f_or_sd]
+                my_files_or_subdirs[idx] = ret_val
             else:
                 my_files_or_subdirs[idx] = f_or_sd
             idx = idx + 1
-        my_folder_obj[my_folder] = my_files_or_subdirs
+        my_folder_obj['items'] = my_files_or_subdirs
         return my_folder_obj
     else:
         print(my_folder + " does not exist or is not a folder")
@@ -116,13 +116,27 @@ def map_folder_and_subfolfers_helper(my_folder, my_folder_obj):
 # Return a python dict containing each file name and folder path
 # within a directory
 def map_folder_and_subfolders(my_folder: str):
-    my_folder_obj = {my_folder: []}
-    return map_folder_and_subfolfers_helper(my_folder, my_folder_obj)
+    my_folder = osp.relpath(my_folder)
+    my_folder_obj = {
+        'folder': my_folder,
+        'items': []
+    }
+    return map_folder_and_subfolders_helper(my_folder, my_folder_obj)
 
 
-# Flatten a folder list to only contain filepaths to files (ignoring the parent folder)
-def flatten_folder_list(parent, folder_list):
-    print("TODO: flatten_folder_list")
+def flatten_folder_map_helper(folder_map, flattened_list):
+    for item in folder_map['items']:
+        if type(item) is str:
+            flattened_list.append(osp.abspath(item))
+        elif type(item) is dict:
+            flatten_folder_map_helper(item, flattened_list)
+
+
+# Flatten a folder map to only contain filepaths to files
+def flatten_folder_map(folder_map):
+    flattened_list = []
+    flatten_folder_map_helper(folder_map, flattened_list)
+    return flattened_list
 
 
 def are_strings_equal_ignore_case(first: str, second: str):
