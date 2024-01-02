@@ -115,9 +115,9 @@ def map_folder_and_subfolfers_helper(my_folder, my_folder_obj):
 
 # Return a python dict containing each file name and folder path
 # within a directory
-def map_folder_and_subfolders(my_folder):
+def map_folder_and_subfolders(my_folder: str):
     my_folder_obj = {my_folder: []}
-    return map_f_and_sf_helper(my_folder, my_folder_obj)
+    return map_folder_and_subfolfers_helper(my_folder, my_folder_obj)
 
 
 # Flatten a folder list to only contain filepaths to files (ignoring the parent folder)

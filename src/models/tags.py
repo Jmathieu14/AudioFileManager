@@ -1,0 +1,25 @@
+from enum import Enum
+
+
+class Tag(Enum):
+    ALBUM = 'album'
+    ALBUMARTIST = 'albumartist'
+    ARTIST = 'artist'
+    COMMENT = 'comment'
+    COMPILATION = 'compilation'
+    COMPOSER = 'composer'
+    DISCNUMBER = 'discnumber'
+    GENRE = 'genre'
+    LYRICS = 'lyrics'
+    TOTALDISCS = 'totaldiscs'
+    TOTALTRACKS = 'totaltracks'
+    TRACKNUMBER = 'tracknumber'
+    TRACKTITLE = 'tracktitle'
+    YEAR = 'year'
+    ISRC = 'isrc'
+    BITRATE = 'bitrate'
+    CODEC = 'codec'
+    LENGTH = 'length'
+    CHANNELS = 'channels'
+    BITSPERSAMPLE = 'bitspersample'
+    SAMPLERATE = 'samplerate'
