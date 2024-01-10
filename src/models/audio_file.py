@@ -9,6 +9,7 @@ class AudioFile:
         self.directory = get_absolute_directory_from_path(path)
         self.file_name = get_file_name_from_path(path)
         self.metadata = music_tag.load_file(self.path)
-
+    
+        
     def save(self):
         self.metadata.save()

@@ -194,7 +194,10 @@ def get_file_name_from_path(filepath: str):
 
 def get_absolute_directory_from_path(filepath: str):
     fullpath = osp.abspath(filepath)
-    return osp.commonpath(fullpath)
+    directory = fullpath
+    if osp.isfile(fullpath):
+        directory = osp.abspath(osp.dirname(fullpath))
+    return directory
 
 
 # Source 1:
