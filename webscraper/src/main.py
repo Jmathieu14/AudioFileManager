@@ -1,4 +1,4 @@
-import webscraper.src.load_playlist_pages as browser
+import load_playlist_pages as browser
 
 
 def main():

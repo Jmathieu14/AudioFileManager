@@ -26,6 +26,14 @@
             "program": "run_tests.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "webscraper.py",
+            "type": "python",
+            "request": "launch",
+            "program": "webscraper/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
