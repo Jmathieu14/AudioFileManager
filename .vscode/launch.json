@@ -13,7 +13,7 @@
         },
         {
             "name": "main.py",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
@@ -21,7 +21,7 @@
         },
         {
             "name": "test.py",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "run_tests.py",
             "console": "integratedTerminal",
@@ -29,7 +29,7 @@
         },
         {
             "name": "webscraper.py",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "webscraper/src/main.py",
             "console": "integratedTerminal",

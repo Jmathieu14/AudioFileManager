@@ -3,6 +3,7 @@
 
 # Ignore config files
 config/
+.test_config
 
 # Ignore user data
 user-data/

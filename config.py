@@ -7,9 +7,11 @@ import utility as util
 
 CONFIG_DIRECTORY = "config"
 CONFIG_FILE_PATH = "config/config.json"
+DATABASE_FILE_PATH = "config/database.json"
 # Make sure test module can access the test config file
-TEST_CONFIG_FILE_PATH = "./config/test_config.json"
-TEST_CONFIG_DIRECTORY = "./config"
+TEST_CONFIG_FILE_PATH = ".test_config/test_config.json"
+TEST_DATABASE_FILE_PATH = ".test_config/test_database.json"
+TEST_CONFIG_DIRECTORY = ".test_config"
 TEST_ACTIVE = False
 CONFIG_JSON = {}
 
@@ -23,18 +25,17 @@ config_template = {
 
 # Returns correct config file path based on TEST_ACTIVE value
 def get_config_file_path():
-    if TEST_ACTIVE:
-        return TEST_CONFIG_FILE_PATH
-    else:
-        return CONFIG_FILE_PATH
+    return TEST_CONFIG_FILE_PATH if TEST_ACTIVE else CONFIG_FILE_PATH
 
 
 # Returns correct config directory path based on TEST_ACTIVE value
-def get_config_directory():
-    if TEST_ACTIVE:
-        return TEST_CONFIG_DIRECTORY
-    else:
-        return CONFIG_DIRECTORY
+def get_config_directory():    
+    return TEST_CONFIG_DIRECTORY if TEST_ACTIVE else CONFIG_DIRECTORY
+    
+
+# Returns correct database file path based on TEST_ACTIVE value
+def get_database_file_path():
+    return TEST_DATABASE_FILE_PATH if TEST_ACTIVE else DATABASE_FILE_PATH
 
 
 # Print the current mode the config.py file is in
@@ -53,6 +54,14 @@ def init_config():
         print("Updated status of configuration: " + config_status())
 
 
+# Initialize database file
+def init_db_file():
+    my_database_file_path = get_database_file_path()
+    if not util.does_file_exist(my_database_file_path) and config_status() != "DNE":
+        util.create_file_if_dne(my_database_file_path, "{}")
+        print("Database file created here: '" + my_database_file_path + "'")
+
+
 # Save the config file
 def save_config():
     my_config_file_path = get_config_file_path()
@@ -63,7 +72,6 @@ def save_config():
 def config_status():
     global CONFIG_JSON
     my_config_file_path = get_config_file_path()
-    # Does the file exist?
     if not util.does_file_exist(my_config_file_path):
         return "DNE"
     else:
@@ -182,6 +190,8 @@ def main():
     print("Status of configuration: " + config_status())
     # Initialize config if not already done
     init_config()
+    # Initialize db if not already done
+    init_db_file()
 
 
 # Source 1: Help on using global variables within the same module

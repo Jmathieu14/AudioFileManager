@@ -6,12 +6,14 @@
 from test import test_util
 from test.client import config_test, utility_test
 from test.gui import settings_page_test
+from test.src import database_test
 
 
 def main():
     # -------  Run with custom test library  -------- #
     config_test.main()
     utility_test.main()
+    database_test.main()
     test_util.verbose_print_test_results()
     print("\nunittest tests:")
     # -------  Run with unittest  -------- #

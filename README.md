@@ -1,5 +1,5 @@
 # Audio File Manager Project:
-> Author: Jacques Mathieu
+> Author: Jacques Mathieu,
 > Start Date: 6/13/2019
 
 ### How to Run...
@@ -18,7 +18,8 @@ python -m run_tests
 ```
 
 ### Before Running
-1. Install Python 3.8.5 or later (64bit)
+1. Install Python 3.10.5 or later (64bit)
+	- If using a virtual environment in Windows, enter the command `.\.venv\Scripts\Activate.ps1` before each session
 2. Install pip
 3. **Install all required dependencies with the following command:**
     ``` cmd
@@ -27,7 +28,7 @@ python -m run_tests
 4. (Optional) Install QtDesigner to edit the GUI
 
 
-##Goals of this project:
+## Goals of this project:
 - To design a GUI tool that helps one easily update the metadata tags on one's collection of audio files
 
   - Features that this project will include that <i>OTHERS do not have:</i> 
@@ -52,9 +53,9 @@ python -m run_tests
 	1) Automatically download new songs from artists you follow on SoundCloud with the correct metadata and file format (this includes creating scripts to navigate through various 3rd party download sites that one might encounter when using SoundCloud)
 	   - At the very least, the information and album art can be downloaded automatically to the local database
 
-###Tech Stack:
+### Tech Stack:
 - Python 3
-- PyCharm IDE
+- PyCharm IDE/VSCode
 - QtDesigner (GUI designer for Python based applications)
 	   
 <b>Development methodology:</b>
