@@ -47,19 +47,21 @@ def print_mode():
 
 
 # Initialize config
-def init_config():
+def init_config(debug=True):
     status = config_status()
     if status == "DNE" or status == "empty":
         create_config_file()
-        print("Updated status of configuration: " + config_status())
+        if debug:
+            print("Updated status of configuration: " + config_status())
 
 
 # Initialize database file
-def init_db_file():
+def init_db_file(debug=True):
     my_database_file_path = get_database_file_path()
     if not util.does_file_exist(my_database_file_path) and config_status() != "DNE":
         util.create_file_if_dne(my_database_file_path, "{}")
-        print("Database file created here: '" + my_database_file_path + "'")
+        if debug:
+            print("Database file created here: '" + my_database_file_path + "'")
 
 
 # Save the config file
@@ -183,15 +185,14 @@ def setup_config_file():
 
 
 # Run this to initialize config file. Must be run AFTER tests have been called in main.py file
-def main():
-    # Print the mode the config file is being run in
-    print_mode()
-    # Show config.py's status
-    print("Status of configuration: " + config_status())
+def main(debug=True):
+    if debug:
+        print_mode()
+        print("Status of configuration: " + config_status())
     # Initialize config if not already done
-    init_config()
+    init_config(debug)
     # Initialize db if not already done
-    init_db_file()
+    init_db_file(debug)
 
 
 # Source 1: Help on using global variables within the same module

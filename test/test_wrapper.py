@@ -13,10 +13,14 @@ def main():
     # -------  Run with custom test library  -------- #
     config_test.main()
     utility_test.main()
-    database_test.main()
     test_util.verbose_print_test_results()
-    print("\nunittest tests:")
+
     # -------  Run with unittest  -------- #
+    print("---------------")
+    print("Unittest Tests:")
+    print("---------------")
+
+    database_test.main()
     settings_page_test.main()
 
 if __name__ == '__main__':

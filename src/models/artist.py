@@ -8,7 +8,7 @@ class Artist:
         self.name = name
         self.aka = aka
         self.genres = genres
-        self.id = id if id is not None else uuid.uuid4()
+        self.id = id if id is not None else uuid.uuid4().__str__()
 
     def is_same_artist_as(self, other_name: str) -> bool:
         if are_strings_equal_ignore_case(self.name, other_name):
@@ -23,6 +23,15 @@ class Artist:
 
     def add_genre(self, genre_id: str) -> None:
         self.genres.append(genre_id)
+
+    def to_dict(self) -> dict[str, list]:
+        return {
+            "type": "artist",
+            "name": self.name,
+            "aka": self.aka,
+            "genres": self.genres,
+            "id": self.id
+        }
 
     def __str__(self) -> str:
         return "Artist: {}, aka: {}, genres: {}, id: {}".format(self.name, self.aka, self.genres, self.id)
