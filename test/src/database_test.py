@@ -71,6 +71,22 @@ class DatabaseTest(unittest.TestCase):
         my_db.insert(constants.existing_genre.to_dict())
         self.assertTrue(database.does_item_exist(constants.existing_genre))
 
+    def test_get_item_by_uuid_for_artist(self):
+        database.init_database_object()
+        my_db = database.get_database()
+        my_db.insert(constants.existing_artist.to_dict())
+        my_db.insert(constants.existing_genre.to_dict())
+        item = database.get_item_by_uuid(constants.existing_artist.id)
+        self.assertEqual(constants.existing_artist, item)
+
+    def test_get_item_by_uuid_for_genre(self):
+        database.init_database_object()
+        my_db = database.get_database()
+        my_db.insert(constants.existing_artist.to_dict())
+        my_db.insert(constants.existing_genre.to_dict())
+        item = database.get_item_by_uuid(constants.existing_genre.id)
+        self.assertEqual(constants.existing_genre, item)
+
 
 def main():
     database_mock_suite = unittest.TestLoader().loadTestsFromTestCase(DatabaseMockTests)

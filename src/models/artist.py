@@ -13,11 +13,11 @@ class Artist:
     def is_same_artist_as(self, other_name: str) -> bool:
         if are_strings_equal_ignore_case(self.name, other_name):
             return True
-        for i in range (0, self.aka.__len__()):
+        for i in range(0, self.aka.__len__()):
             if are_strings_equal_ignore_case(self.aka[i], other_name):
                 return True
         return False
-    
+
     def add_aka_name(self, new_name: str) -> None:
         self.aka.append(new_name)
 
@@ -32,6 +32,12 @@ class Artist:
             "genres": self.genres,
             "id": self.id
         }
+
+    def __eq__(self, __value: object) -> bool:
+        if type(__value) == type(self):
+            return self.name == __value.name and self.aka == __value.aka and self.genres == __value.genres and self.id == __value.id
+        else:
+            return False
 
     def __str__(self) -> str:
         return "Artist: {}, aka: {}, genres: {}, id: {}".format(self.name, self.aka, self.genres, self.id)

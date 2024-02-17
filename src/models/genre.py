@@ -7,7 +7,7 @@ class Genre:
     def __init__(self, name: str, aka: list, id=None) -> None:
         self.name = name
         self.aka = aka
-        self.id = id if id is not None else uuid.uuid4.__str__()
+        self.id = id if id is not None else uuid.uuid4().__str__()
 
     def is_same_genre_as(self, other_name: str) -> bool:
         if are_strings_equal_ignore_case(self.name, other_name):
@@ -24,6 +24,12 @@ class Genre:
             "aka": self.aka,
             "id": self.id
         }
+    
+    def __eq__(self, __value: object) -> bool:
+        if type(__value) == type(self):
+            return self.name == __value.name and self.aka == __value.aka and self.id == __value.id
+        else:
+            return False
     
     def add_aka_name(self, new_name: str) -> None:
         self.aka.append(new_name)

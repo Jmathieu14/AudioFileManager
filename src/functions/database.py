@@ -26,6 +26,19 @@ def close_database() -> None:
         local_database.close()
 
 
+def get_item_by_uuid(id: str) -> Artist | Genre:
+    q = Query()
+    items = local_database.search(q.id == id)
+    item = None
+    if items.__len__() == 1:
+        item = items[0]
+        if item['type'] == 'artist':
+            item = Artist(item['name'], item['aka'], item['genres'], item['id'])
+        elif item['type'] == 'genre':
+            item = Genre(item['name'], item['aka'], item['id'])
+    return item
+
+
 def does_item_exist(item: Artist | Genre) -> bool:
     name = item.name
     Item = Query()
