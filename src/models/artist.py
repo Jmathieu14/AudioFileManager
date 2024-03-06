@@ -1,6 +1,6 @@
 import uuid
 from src.models.aka import Aka
-from src.aka_util import akas_are_equal, akas_to_dict, handle_akas_list
+from src.aka_util import akas_are_equal, akas_to_dict, akas_to_str, handle_akas_list
 
 from utility import are_strings_equal_ignore_case
 
@@ -16,7 +16,7 @@ class Artist:
         if are_strings_equal_ignore_case(self.name, other_name):
             return True
         for i in range(0, self.akas.__len__()):
-            if are_strings_equal_ignore_case(self.akas[i], other_name):
+            if are_strings_equal_ignore_case(self.akas[i].name, other_name):
                 return True
         return False
 
@@ -43,4 +43,4 @@ class Artist:
             return False
 
     def __str__(self) -> str:
-        return "Artist: {}, aka: {}, genres: {}, id: {}".format(self.name, self.akas, self.genres, self.id)
+        return "Artist: {}, aka: {}, genres: {}, id: {}".format(self.name, akas_to_str(self.akas), self.genres, self.id)

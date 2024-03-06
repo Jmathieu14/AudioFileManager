@@ -4,6 +4,7 @@ from ..models.artist import Artist
 from ..models.audio_file import AudioFile
 import utility
 import os.path as osp
+from .database import init_database_object, save_item_to_database_if_does_not_exist, close_database
 
 
 audio_file_extensions = utility.file_to_json_obj(osp.abspath("./ext/audio_codecs.json"))['extensions']
@@ -30,8 +31,11 @@ def scan_library(directory: str):
             print(e)
         except PIL.UnidentifiedImageError as e:
             print(e)
+    init_database_object()
     for artist in my_artists:
         print(artist)
+        save_item_to_database_if_does_not_exist(artist)
+    close_database()
 
 
 def audio_file_to_artist(audio_file: AudioFile, existing_artists: set=[]) -> Artist:
@@ -53,6 +57,6 @@ def audio_file_to_artist(audio_file: AudioFile, existing_artists: set=[]) -> Art
                 if existing_artist.is_same_artist_as(artist_name):
                     is_existing_artist = True
             if not is_existing_artist:
-                artist = Artist(artist_name.strip(), [], audio_file.metadata['genre'])
+                artist = Artist(artist_name.strip(), [], audio_file.metadata['genre'].__str__())
                 existing_artists.append(artist)
     return artist

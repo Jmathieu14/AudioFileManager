@@ -2,7 +2,7 @@ from src.models.aka import Aka
 
 
 def handle_akas_list(akas: list) -> list[Aka]:
-    if akas is not None and akas.__len__() > 0 and all(isinstance(i, Aka) for i in akas):
+    if (akas is not None and akas.__len__() == 0) or (akas.__len__() > 0 and all(isinstance(i, Aka) for i in akas)):
         return akas
     elif all(isinstance(i, str) for i in akas):
         return string_list_to_akas(akas)
@@ -36,8 +36,18 @@ def akas_to_dict(akas: list[Aka]) -> dict[list, str]:
         akas_dict.append(aka.to_dict())
     return akas_dict
 
+
+def akas_to_str(akas: list[Aka]) -> str:
+    akas_str = "["
+    for aka in akas:
+        akas_str += "'{}', ".format(aka.name)
+    akas_str = akas_str.removesuffix(", ")
+    return akas_str + "]"
+
+
 def sortAkasByName(element):
     return element.name
+
 
 def akas_are_equal(akasOne: list[Aka], akasTwo: list[Aka]) -> bool:
     if akasOne.__len__() != akasTwo.__len__():
@@ -48,4 +58,3 @@ def akas_are_equal(akasOne: list[Aka], akasTwo: list[Aka]) -> bool:
         if not akasOne[i].__eq__(akasTwo[i]):
             return False
     return True
-    
