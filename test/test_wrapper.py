@@ -6,7 +6,7 @@
 from test import test_util
 from test.client import config_test, utility_test
 from test.gui import settings_page_test
-from test.src import database_test
+from test.src import database_test, scan_library_test
 
 
 def main():
@@ -22,6 +22,7 @@ def main():
 
     database_test.main()
     settings_page_test.main()
+    scan_library_test.main()
 
 if __name__ == '__main__':
     main()

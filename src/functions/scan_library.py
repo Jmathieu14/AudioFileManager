@@ -24,6 +24,7 @@ def scan_library(directory: str):
                 print("'{}' is not a supported extension".format(extension))
     else:
         print('Given directory does not exist: ' + directory)
+    init_database_object()
     for audio_file in audio_files:
         try:
             audio_file_to_artist(audio_file, my_artists)
@@ -31,7 +32,6 @@ def scan_library(directory: str):
             print(e)
         except PIL.UnidentifiedImageError as e:
             print(e)
-    init_database_object()
     for artist in my_artists:
         print(artist)
         save_item_to_database_if_does_not_exist(artist)
@@ -40,11 +40,13 @@ def scan_library(directory: str):
 
 def audio_file_to_artist(audio_file: AudioFile, existing_artists: set=[]) -> Artist:
     artist = None
-    if (audio_file.metadata != None and audio_file.metadata['artist'] != None and audio_file.metadata['artist'].__str__() != ''):
+    if (audio_file != None and audio_file.metadata != None and audio_file.metadata['artist'] != None and audio_file.metadata['artist'].__str__() != ''):
+        # Split using existing artist names first
         artist_metadata_string = audio_file.metadata['artist'].__str__()
         artists_from_artist_tag = []
         if ', ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split(', ')
+        # Make exception for Camo & Crooked
         elif '& ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split('& ')
         elif '/ ' in artist_metadata_string:
