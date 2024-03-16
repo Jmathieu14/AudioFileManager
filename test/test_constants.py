@@ -9,3 +9,6 @@ existing_artist = Artist(name="Skrillex", akas=["Sonny Moore"], genres=[existing
 duplicate_artist = Artist(name="Skrillex", akas=["Sonny Moore"], genres=[existing_genre.id])
 similar_artist = Artist(name="Sonny Moore", akas=["Skrillex"], genres=[existing_genre.id])
 artist_with_existing_akas = Artist(name="Unknown", akas=["Sonny Moore"], genres=[existing_genre.id])
+
+# Audio File metadata mocks
+solo_skrillex_audio_file = {'artist': 'Skrillex', 'title': 'First of the Year (Equinox)', 'genre': 'Dubstep'}

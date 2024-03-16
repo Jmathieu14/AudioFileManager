@@ -4,7 +4,7 @@ from ..models.artist import Artist
 from ..models.audio_file import AudioFile
 import utility
 import os.path as osp
-from .database import init_database_object, save_item_to_database_if_does_not_exist, close_database
+from .database import find_item_by_name, init_database_object, save_item_to_database_if_does_not_exist, close_database
 
 
 audio_file_extensions = utility.file_to_json_obj(osp.abspath("./ext/audio_codecs.json"))['extensions']
@@ -59,6 +59,8 @@ def audio_file_to_artist(audio_file: AudioFile, existing_artists: set=[]) -> Art
                 if existing_artist.is_same_artist_as(artist_name):
                     is_existing_artist = True
             if not is_existing_artist:
-                artist = Artist(artist_name.strip(), [], audio_file.metadata['genre'].__str__())
+                genre_name = audio_file.metadata['genre'].__str__()
+                genre_from_db = find_item_by_name(genre_name)
+                artist = Artist(artist_name.strip(), [], [genre_from_db.id])
                 existing_artists.append(artist)
     return artist

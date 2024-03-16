@@ -16,6 +16,7 @@ class AudioFileToArtistTest(unittest.TestCase):
         config.main(debug=False)
 
     def tearDown(self) -> None:
+        database.close_database()
         util.delete_file(config.TEST_CONFIG_FILE_PATH)
         util.delete_file(config.TEST_DATABASE_FILE_PATH)
         util.delete_empty_folder(config.TEST_CONFIG_DIRECTORY)
@@ -43,8 +44,16 @@ class AudioFileToArtistTest(unittest.TestCase):
         actual_artist = audio_file_to_artist(audio_file_mock, [])
         self.assertIsNone(actual_artist)
 
-    def test_creates_single_artist(self):
-        pass
+    @mock.patch("src.models.audio_file")
+    def test_creates_single_artist(self, audio_file_mock):
+        database.init_database_object()
+        database.save_item_to_database_if_does_not_exist(constants.existing_genre)
+        audio_file_mock.metadata = constants.solo_skrillex_audio_file
+        expected_artist_name = 'Skrillex'
+        expected_genres_list = [constants.existing_genre.id]
+        actual_artist = audio_file_to_artist(audio_file_mock, [])
+        self.assertEqual(expected_artist_name, actual_artist.name)
+        self.assertEqual(expected_genres_list, actual_artist.genres)
 
 
 def main():
