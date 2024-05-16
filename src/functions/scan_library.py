@@ -71,14 +71,13 @@ def audio_file_to_artist(audio_file: AudioFile, existing_artists: set = []) -> A
 
 
 def get_genre_from_audio_file(audio_file: AudioFile):
-    genre = None
     if audio_file != None and audio_file.metadata != None and audio_file.metadata['genre'] != None and audio_file.metadata['genre'].__str__() != '':
-        genre_name = audio_file.metadata['genre'].__str__()        
+        genre_name = audio_file.metadata['genre'].__str__()
         potential_genre_object = find_item_by_name(genre_name)
-        if potential_genre_object != None and type(potential_genre_object) == type(Genre):
+        if potential_genre_object != None and type(potential_genre_object) == Genre:
             return potential_genre_object
         else:
             genre_to_add = Genre(genre_name, [])
             save_item_to_database_if_does_not_exist(genre_to_add)
             return genre_to_add
-    return genre
+    return None

@@ -56,14 +56,14 @@ def _handle_find_item_by_name_respect_case(name: str) -> Artist | Genre | None:
 
 
 def _items_to_artist_or_genre(items: list) -> Artist | Genre | None:
-    item = None
     if items != None and items.__len__() == 1:
         item = items[0]
         if item['type'] == 'artist':
             item = Artist(item['name'], item['akas'], item['genres'], item['id'])
         elif item['type'] == 'genre':
             item = Genre(item['name'], item['akas'], item['id'])
-    return item
+        return item
+    return None
 
 
 def does_item_exist(item: Artist | Genre) -> bool:
