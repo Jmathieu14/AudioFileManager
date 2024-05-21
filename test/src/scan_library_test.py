@@ -51,6 +51,14 @@ class GetGenreFromAudioFileTest(unittest.TestCase):
         self.assertTrue(constants.existing_genre.__eq__(actual_genre))
 
     @mock.patch("src.models.audio_file")
+    def test_returns_expected_genre_from_db_if_is_aka(self, audio_file_mock):
+        database.init_database_object()
+        database.save_item_to_database_if_does_not_exist(constants.existing_genre)
+        audio_file_mock.metadata = constants.solo_skrillex_audio_file_with_aka_genre
+        actual_genre = get_genre_from_audio_file(audio_file_mock)
+        self.assertTrue(constants.existing_genre.__eq__(actual_genre))
+
+    @mock.patch("src.models.audio_file")
     def test_creates_genre_and_adds_to_db(self, audio_file_mock):
         database.init_database_object()
         audio_file_mock.metadata = constants.solo_skrillex_audio_file
@@ -105,6 +113,19 @@ class AudioFileToArtistTest(unittest.TestCase):
         actual_artist = audio_file_to_artist(audio_file_mock, [])
         self.assertEqual(expected_artist_name, actual_artist.name)
         self.assertEqual(expected_genres_list, actual_artist.genres)
+
+    @mock.patch("src.models.audio_file")
+    def test_matches_artist_with_ampersand(self, audio_file_mock):
+        database.init_database_object()
+        database.save_item_to_database_if_does_not_exist(constants.artist_with_ampersand)
+        audio_file_mock.metadata = constants.solo_camo_and_krooked_audio_file
+        expected_artist_name = "Camo & Krooked"
+        expected_genres_list = [constants.drum_and_bass.id]
+        actual_artist = audio_file_to_artist(audio_file_mock, [])
+        self.assertEqual(expected_artist_name, actual_artist.name)
+        self.assertEqual(expected_genres_list, actual_artist.genres)
+
+    #TODO: add test to match artist metadata string separated via commas AND has camo & krooked
 
 
 def main():

@@ -47,26 +47,32 @@ def audio_file_to_artist(audio_file: AudioFile, existing_artists: set = []) -> A
     if audio_file != None and audio_file.metadata != None and audio_file.metadata['artist'] != None and audio_file.metadata['artist'].__str__() != '':
         # Split using existing artist names first
         artist_metadata_string = audio_file.metadata['artist'].__str__()
+        potential_artist_object = find_item_by_name(artist_metadata_string)
         artists_from_artist_tag = []
-        if ', ' in artist_metadata_string:
+        if potential_artist_object is not None:
+            artists_from_artist_tag = [potential_artist_object]
+        elif ', ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split(', ')
-        # Make exception for Camo & Crooked
         elif '& ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split('& ')
         elif '/ ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split('/ ')
         else:
             artists_from_artist_tag.append(artist_metadata_string)
-        for artist_name in artists_from_artist_tag:
-            is_existing_artist = False
-            for existing_artist in existing_artists:
-                if existing_artist.is_same_artist_as(artist_name):
-                    is_existing_artist = True
-            if not is_existing_artist:
-                genre_name = audio_file.metadata['genre'].__str__()
-                genre_from_db = find_item_by_name(genre_name)
-                artist = Artist(artist_name.strip(), [], [genre_from_db.id])
-                existing_artists.append(artist)
+        if type(artists_from_artist_tag[0]) is Artist:
+            for artist_from_db in artists_from_artist_tag:
+                existing_artists.append(artist_from_db)
+                artist = artist_from_db
+        else:
+            for artist_name in artists_from_artist_tag:
+                is_existing_artist = False
+                for existing_artist in existing_artists:
+                    if existing_artist.is_same_artist_as(artist_name):
+                        is_existing_artist = True
+                if not is_existing_artist:
+                    genre_from_db = get_genre_from_audio_file(audio_file)
+                    artist = Artist(artist_name.strip(), [], [genre_from_db.id])
+                    existing_artists.append(artist)
     return artist
 
 
