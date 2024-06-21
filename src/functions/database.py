@@ -1,7 +1,7 @@
 from typing import List
 from tinydb import Query, TinyDB
 from src.models.artist import Artist
-from config import get_database_file_path
+from config import get_database_file_path, init_config
 from src.models.genre import Genre
 import re
 
@@ -18,6 +18,7 @@ def get_database() -> TinyDB | None:
 
 def init_database_object() -> None:
     global local_database, database_initialized
+    init_config()
     my_database_file_path = get_database_file_path()
     local_database = TinyDB(my_database_file_path)
     database_initialized = True
@@ -72,16 +73,15 @@ def _items_to_artist_or_genre(items: list) -> Artist | Genre | None:
         return item
     return None
 
-def _items_to_list_of_artists_or_genres(items: list) -> List[Artist] | List[Genre] | None:
-    if items != None and items.__len__() == 1:
-        items_list = []
+def _items_to_list_of_artists_or_genres(items: list) -> List[Artist] | List[Genre]:
+    items_list = []
+    if items != None and items.__len__() > 0:
         for item in items:
             if item['type'] == 'artist':
                 items_list.append(Artist(item['name'], item['akas'], item['genres'], item['id']))
             elif item['type'] == 'genre':
                 items_list.append(Genre(item['name'], item['akas'], item['id']))
-        return items_list
-    return None
+    return items_list
 
 
 def does_item_exist(item: Artist | Genre) -> bool:

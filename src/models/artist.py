@@ -41,6 +41,9 @@ class Artist:
             return self.name == __value.name and akas_are_equal(self.akas, __value.akas) and self.genres == __value.genres and self.id == __value.id
         else:
             return False
+    
+    def __hash__(self) -> int:
+        return hash(self.id)
 
     def __str__(self) -> str:
         return "Artist: {}, aka: {}, genres: {}, id: {}".format(self.name, akas_to_str(self.akas), self.genres, self.id)

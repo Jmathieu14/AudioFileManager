@@ -12,8 +12,8 @@ from .database import find_item_by_name, get_all_artists, init_database_object, 
 
 audio_file_extensions = utility.file_to_json_obj(
     osp.abspath("./ext/audio_codecs.json"))['extensions']
-working_artist_set: set = []
-existing_artists_from_db: set = []
+working_new_artists_set: set = set()
+existing_artists_from_db: List = []
 
 
 def scan_library(directory: str):
@@ -34,13 +34,12 @@ def scan_library(directory: str):
     existing_artists_from_db = get_all_artists()
     for audio_file in audio_files:
         try:
-            artists_from_file = audio_file_to_artists(audio_file, existing_artists_from_db)
-            working_artist_set.append(artists_from_file)
+            audio_file_to_artists(audio_file, working_new_artists_set, existing_artists_from_db)
         except ValueError as e:
             print(e)
         except PIL.UnidentifiedImageError as e:
             print(e)
-    for artist in working_artist_set:
+    for artist in working_new_artists_set:
         print(artist)
         save_item_to_database_if_does_not_exist(artist)
     close_database()
@@ -48,8 +47,19 @@ def scan_library(directory: str):
 
 def audio_file_to_artists(
     audio_file: AudioFile,
-    existing_artists_from_db: set = [],
+    working_new_artists_set: set = set(),
+    existing_artists_from_db: List = [],
 ) -> List[Artist]:
+    """Parses artist metadata from the given audio file to provide a list of pertaining Artist objects
+
+    Args:
+        audio_file (AudioFile): The audio file to be analyzed
+        working_new_artists_set (set, optional): an in memory collection of artists found while parsing multiple audio files to be saved to the database later. Defaults to set().
+        existing_artists_from_db (List, optional): a list of Artist objects that represent the existing artists in the database. Defaults to [].
+
+    Returns:
+        List[Artist]: A list of Artist objects that pertain to the given AudioFile
+    """
     artist_list = []
     if audio_file != None and audio_file.metadata != None and audio_file.metadata['artist'] != None and audio_file.metadata['artist'].__str__() != '':
         artist_metadata_string = audio_file.metadata['artist'].__str__()
@@ -71,14 +81,15 @@ def audio_file_to_artists(
         artists_from_artist_tag = list(filter(None, artists_from_artist_tag))
 
         for artist_name in artists_from_artist_tag:
-            is_existing_artist = False
-            for existing_artist in existing_artists_from_db:
-                if existing_artist.is_same_artist_as(artist_name):
-                    artist_list.append(existing_artist)
-                    is_existing_artist = True
-            if not is_existing_artist:
+            is_in_working_new_artists_set = False
+            for working_new_artist in working_new_artists_set:
+                if working_new_artist.is_same_artist_as(artist_name):
+                    artist_list.append(working_new_artist)
+                    is_in_working_new_artists_set = True
+            if not is_in_working_new_artists_set:
                 genre_from_db = get_genre_from_audio_file(audio_file)
                 artist = Artist(artist_name.strip(), [], [genre_from_db.id])
+                working_new_artists_set.add(artist)
                 artist_list.append(artist)
     return artist_list
 

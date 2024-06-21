@@ -82,25 +82,25 @@ class AudioFileToArtistsTest(unittest.TestCase):
         config.TEST_ACTIVE = False
 
     def test_returns_empty_list_if_audio_file_is_none(self):
-        actual_artist_list = audio_file_to_artists(None, [])
+        actual_artist_list = audio_file_to_artists(None, set(), set())
         self.assertEquals(actual_artist_list, [])
 
     @mock.patch("src.models.audio_file")
     def test_returns_empty_list_if_metadata_is_none(self, audio_file_mock):
         audio_file_mock.metadata = None
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(), set())
         self.assertEquals(actual_artist_list, [])
 
     @mock.patch("src.models.audio_file")
     def test_returns_empty_list_if_audio_file_artist_is_none(self, audio_file_mock):
         audio_file_mock.metadata = {"artist": None}
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(), set())
         self.assertEquals(actual_artist_list, [])
 
     @mock.patch("src.models.audio_file")
     def test_returns_empty_list_if_audio_file_artist_is_empty_string(self, audio_file_mock):
         audio_file_mock.metadata = {"artist": ""}
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(), set())
         self.assertEquals(actual_artist_list, [])
 
     @mock.patch("src.models.audio_file")
@@ -110,7 +110,7 @@ class AudioFileToArtistsTest(unittest.TestCase):
         audio_file_mock.metadata = constants.solo_skrillex_audio_file
         expected_artist_name = "Skrillex"
         expected_genres_list = [constants.existing_genre.id]
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(), set())
         self.assertEqual(expected_artist_name, actual_artist_list[0].name)
         self.assertEqual(expected_genres_list, actual_artist_list[0].genres)
 
@@ -122,7 +122,7 @@ class AudioFileToArtistsTest(unittest.TestCase):
         audio_file_mock.metadata = constants.solo_camo_and_krooked_audio_file
         expected_artist_name = "Camo & Krooked"
         expected_genres_list = [constants.drum_and_bass.id]
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [artist_with_ampersand_from_db])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(), [artist_with_ampersand_from_db])
         self.assertEqual(expected_artist_name, actual_artist_list[0].name)
         self.assertEqual(expected_genres_list, actual_artist_list[0].genres)
         
@@ -136,7 +136,7 @@ class AudioFileToArtistsTest(unittest.TestCase):
         expected_artist_name_1 = "Camo & Krooked"
         expected_artist_name_2 = "Tasha Baxter"
         expected_genres_list = [constants.drum_and_bass.id]
-        actual_artist_list = audio_file_to_artists(audio_file_mock, [artist_with_ampersand_from_db])
+        actual_artist_list = audio_file_to_artists(audio_file_mock, set(),  [artist_with_ampersand_from_db])
         self.assertEqual(expected_artist_name_1, actual_artist_list[0].name)
         self.assertEqual(expected_artist_name_2, actual_artist_list[1].name)
         self.assertEqual(expected_genres_list, actual_artist_list[0].genres)
