@@ -1,3 +1,4 @@
+from typing import List
 from tinydb import Query, TinyDB
 from src.models.artist import Artist
 from config import get_database_file_path
@@ -33,6 +34,12 @@ def get_item_by_uuid(id: str) -> Artist | Genre:
     return _items_to_artist_or_genre(items)
 
 
+def get_all_artists() -> List[Artist]:
+    q = Query()
+    items = local_database.search(q.type == 'artist')
+    return _items_to_list_of_artists_or_genres(items)
+
+
 def find_item_by_name(name: str, ignore_case=True) -> Artist | Genre | None:
     q = Query()
     aka = Query()
@@ -63,6 +70,17 @@ def _items_to_artist_or_genre(items: list) -> Artist | Genre | None:
         elif item['type'] == 'genre':
             item = Genre(item['name'], item['akas'], item['id'])
         return item
+    return None
+
+def _items_to_list_of_artists_or_genres(items: list) -> List[Artist] | List[Genre] | None:
+    if items != None and items.__len__() == 1:
+        items_list = []
+        for item in items:
+            if item['type'] == 'artist':
+                items_list.append(Artist(item['name'], item['akas'], item['genres'], item['id']))
+            elif item['type'] == 'genre':
+                items_list.append(Genre(item['name'], item['akas'], item['id']))
+        return items_list
     return None
 
 

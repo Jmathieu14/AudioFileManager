@@ -1,3 +1,4 @@
+from typing import List
 import PIL
 
 from src.models.genre import Genre
@@ -6,12 +7,13 @@ from ..models.artist import Artist
 from ..models.audio_file import AudioFile
 import utility
 import os.path as osp
-from .database import find_item_by_name, init_database_object, save_item_to_database_if_does_not_exist, close_database
+from .database import find_item_by_name, get_all_artists, init_database_object, save_item_to_database_if_does_not_exist, close_database
 
 
 audio_file_extensions = utility.file_to_json_obj(
     osp.abspath("./ext/audio_codecs.json"))['extensions']
-my_artists: set = []
+working_artist_set: set = []
+existing_artists_from_db: set = []
 
 
 def scan_library(directory: str):
@@ -29,29 +31,36 @@ def scan_library(directory: str):
     else:
         print('Given directory does not exist: ' + directory)
     init_database_object()
+    existing_artists_from_db = get_all_artists()
     for audio_file in audio_files:
         try:
-            audio_file_to_artist(audio_file, my_artists)
+            artists_from_file = audio_file_to_artists(audio_file, existing_artists_from_db)
+            working_artist_set.append(artists_from_file)
         except ValueError as e:
             print(e)
         except PIL.UnidentifiedImageError as e:
             print(e)
-    for artist in my_artists:
+    for artist in working_artist_set:
         print(artist)
         save_item_to_database_if_does_not_exist(artist)
     close_database()
 
 
-def audio_file_to_artist(audio_file: AudioFile, existing_artists: set = []) -> Artist:
-    artist = None
+def audio_file_to_artists(
+    audio_file: AudioFile,
+    existing_artists_from_db: set = [],
+) -> List[Artist]:
+    artist_list = []
     if audio_file != None and audio_file.metadata != None and audio_file.metadata['artist'] != None and audio_file.metadata['artist'].__str__() != '':
-        # Split using existing artist names first
         artist_metadata_string = audio_file.metadata['artist'].__str__()
-        potential_artist_object = find_item_by_name(artist_metadata_string)
         artists_from_artist_tag = []
-        if potential_artist_object is not None:
-            artists_from_artist_tag = [potential_artist_object]
-        elif ', ' in artist_metadata_string:
+        for existing_artist in existing_artists_from_db:
+            if existing_artist.name in artist_metadata_string:
+                artist_list.append(existing_artist)
+                artists_from_artist_tag = artist_metadata_string.split(existing_artist.name)
+                artist_metadata_string = ''.join(artists_from_artist_tag)
+
+        if ', ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split(', ')
         elif '& ' in artist_metadata_string:
             artists_from_artist_tag = artist_metadata_string.split('& ')
@@ -59,21 +68,19 @@ def audio_file_to_artist(audio_file: AudioFile, existing_artists: set = []) -> A
             artists_from_artist_tag = artist_metadata_string.split('/ ')
         else:
             artists_from_artist_tag.append(artist_metadata_string)
-        if type(artists_from_artist_tag[0]) is Artist:
-            for artist_from_db in artists_from_artist_tag:
-                existing_artists.append(artist_from_db)
-                artist = artist_from_db
-        else:
-            for artist_name in artists_from_artist_tag:
-                is_existing_artist = False
-                for existing_artist in existing_artists:
-                    if existing_artist.is_same_artist_as(artist_name):
-                        is_existing_artist = True
-                if not is_existing_artist:
-                    genre_from_db = get_genre_from_audio_file(audio_file)
-                    artist = Artist(artist_name.strip(), [], [genre_from_db.id])
-                    existing_artists.append(artist)
-    return artist
+        artists_from_artist_tag = list(filter(None, artists_from_artist_tag))
+
+        for artist_name in artists_from_artist_tag:
+            is_existing_artist = False
+            for existing_artist in existing_artists_from_db:
+                if existing_artist.is_same_artist_as(artist_name):
+                    artist_list.append(existing_artist)
+                    is_existing_artist = True
+            if not is_existing_artist:
+                genre_from_db = get_genre_from_audio_file(audio_file)
+                artist = Artist(artist_name.strip(), [], [genre_from_db.id])
+                artist_list.append(artist)
+    return artist_list
 
 
 def get_genre_from_audio_file(audio_file: AudioFile):

@@ -16,3 +16,4 @@ artist_with_ampersand = Artist(name="Camo & Krooked", akas=[], genres=[drum_and_
 solo_skrillex_audio_file = {'artist': 'Skrillex', 'title': 'First of the Year (Equinox)', 'genre': 'Dubstep'}
 solo_skrillex_audio_file_with_aka_genre = {'artist': 'Skrillex', 'title': 'First of the Year (Equinox)', 'genre': 'dubsteppa'}
 solo_camo_and_krooked_audio_file = {'artist': 'Camo & Krooked', 'title': 'Mindset', 'genre':'Drum & Bass'}
+dual_artist_camo_and_krooked_and_tasha_baxter_audio_file = {'artist': 'Camo & Krooked, Tasha Baxter', 'title': 'Ooooh La LA', 'genre':'Drum & Bass'}
