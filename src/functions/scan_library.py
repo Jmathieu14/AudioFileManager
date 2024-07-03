@@ -1,35 +1,28 @@
 from typing import List
 import PIL
 
+from src.functions.audio_file_util import get_audio_files_from_directory
 from src.models.genre import Genre
 
 from ..models.artist import Artist
 from ..models.audio_file import AudioFile
 import utility
 import os.path as osp
-from .database import find_item_by_name, get_all_artists, init_database_object, save_item_to_database_if_does_not_exist, close_database
+from .database import (
+    find_item_by_name,
+    get_all_artists,
+    init_database_object,
+    save_item_to_database_if_does_not_exist,
+    close_database,
+)
 
 
-audio_file_extensions = utility.file_to_json_obj(
-    osp.abspath("./ext/audio_codecs.json"))['extensions']
 working_new_artists_set: set = set()
 existing_artists_from_db: List = []
 
 
 def scan_library(directory: str):
-    if utility.does_file_exist(directory):
-        print("Scanning '{}'".format(directory))
-        flattened_file_list = utility.flatten_folder(directory)
-        audio_files = []
-        for filepath in flattened_file_list:
-            extension = osp.splitext(filepath)[1]
-            if extension in audio_file_extensions:
-                audio_file = AudioFile(filepath)
-                audio_files.append(audio_file)
-            else:
-                print("'{}' is not a supported extension".format(extension))
-    else:
-        print('Given directory does not exist: ' + directory)
+    audio_files = get_audio_files_from_directory(directory)
     init_database_object()
     existing_artists_from_db = get_all_artists()
     for audio_file in audio_files:
