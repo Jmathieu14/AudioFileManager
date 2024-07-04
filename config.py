@@ -3,6 +3,7 @@
 # Part of the AudioFileManager project
 # Program that sets-old up configuration file for user
 
+from typing import List
 import utility as util
 
 CONFIG_DIRECTORY = "config"
@@ -13,13 +14,15 @@ TEST_CONFIG_FILE_PATH = ".test_config/test_config.json"
 TEST_DATABASE_FILE_PATH = ".test_config/test_database.json"
 TEST_CONFIG_DIRECTORY = ".test_config"
 TEST_ACTIVE = False
+REQUIRED_METADATA_KEY = "required-metadata"
 CONFIG_JSON = {}
 
 # Template for the configuration file
 config_template = {
   "downloads-folder": "",
   "editing-folder": "",
-  "destination-folder": ""
+  "destination-folder": "",
+  REQUIRED_METADATA_KEY: []
 }
 
 
@@ -31,7 +34,7 @@ def get_config_file_path():
 # Returns correct config directory path based on TEST_ACTIVE value
 def get_config_directory():    
     return TEST_CONFIG_DIRECTORY if TEST_ACTIVE else CONFIG_DIRECTORY
-    
+
 
 # Returns correct database file path based on TEST_ACTIVE value
 def get_database_file_path():
@@ -90,7 +93,7 @@ def config_status():
         if CONFIG_JSON[k] is None or CONFIG_JSON[k] == "":
             return "incomplete"
         # If folder does not exist, return 'path_dne' status
-        elif not util.does_file_exist(CONFIG_JSON[k]):
+        elif k != REQUIRED_METADATA_KEY and not util.does_file_exist(CONFIG_JSON[k]):
             return "path_dne"
     # If we get all the way here, then everything checks out
     return "complete"
@@ -156,8 +159,8 @@ def get_editing_folder():
         return CONFIG_JSON["editing-folder"]
 
 
-# Set the destination folder path for our config file
 def set_destination_folder(path):
+    """Set the destination folder path for our config file"""
     global CONFIG_JSON
     if "destination-folder" in CONFIG_JSON.keys():
         if CONFIG_JSON["destination-folder"] == "":
@@ -165,18 +168,33 @@ def set_destination_folder(path):
             save_config()
 
 
-# Update the destination folder path for our config file
 def update_destination_folder(path):
+    """Update the destination folder path for our config file"""
     global CONFIG_JSON
     if "destination-folder" in CONFIG_JSON.keys():
         CONFIG_JSON["destination-folder"] = path
         save_config()
 
 
-# Get the path for the configured destination folder
 def get_destination_folder():
+    """Get the path for the configured destination folder"""
     if "destination-folder" in CONFIG_JSON.keys():
         return CONFIG_JSON["destination-folder"]
+
+
+def set_required_metadata(required_metadata_fields: List[str]):
+    """Set the required metadata field list"""
+    global CONFIG_JSON
+    if REQUIRED_METADATA_KEY in CONFIG_JSON.keys():
+        CONFIG_JSON[REQUIRED_METADATA_KEY] = required_metadata_fields
+        save_config()
+
+
+def get_required_metadata():
+    """Get the required metadata field list"""
+    global CONFIG_JSON
+    if REQUIRED_METADATA_KEY in CONFIG_JSON.keys():
+        return CONFIG_JSON[REQUIRED_METADATA_KEY]
 
 
 # Setup config file for user
