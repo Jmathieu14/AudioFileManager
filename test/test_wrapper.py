@@ -6,7 +6,7 @@
 from test import test_util
 from test.client import config_test, utility_test
 from test.gui import settings_page_test
-from test.src import database_test, scan_library_test
+from test.src import database_test, scan_library_test, get_files_with_missing_metadata_test
 
 
 def main():
@@ -23,6 +23,7 @@ def main():
     database_test.main()
     settings_page_test.main()
     scan_library_test.main()
+    get_files_with_missing_metadata_test.main()
 
 if __name__ == '__main__':
     main()
